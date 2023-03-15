@@ -1,4 +1,4 @@
-# flutter_japan
+# senior project
 
 Combined model and skeleton
 
