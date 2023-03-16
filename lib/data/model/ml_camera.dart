@@ -17,16 +17,18 @@ final mlCameraProvider =
     FutureProvider.autoDispose.family<MLCamera, Size>((ref, size) async {
   final cameras = await availableCameras();
   final cameraController = CameraController(
-    cameras[0],
+    cameras[1],
     ResolutionPreset.low,
     enableAudio: false,
   );
   await cameraController.initialize();
+
   final mlCamera = MLCamera(
     ref.read,
     cameraController,
     size,
   );
+
   return mlCamera;
 });
 
@@ -66,6 +68,7 @@ class MLCamera {
     }
 
     isPredicting = true;
+
     final isolateCamImgData = IsolateData(
       cameraImage: cameraImage,
       interpreterAddress: classifier.interpreter!.address,

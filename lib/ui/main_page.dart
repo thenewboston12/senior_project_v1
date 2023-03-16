@@ -17,6 +17,7 @@ class MainPage extends HookConsumerWidget {
     final size = MediaQuery.of(context).size;
     final mlCamera = ref.watch(mlCameraProvider(size));
     final recognitions = ref.watch(recognitionsProvider);
+
     return Scaffold(
       backgroundColor: Colors.grey[300],
       appBar: AppBar(
@@ -28,65 +29,78 @@ class MainPage extends HookConsumerWidget {
         backgroundColor: Colors.grey[300],
         leading: IconButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const Settings()));
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Settings(),
+              ),
+            );
           },
           icon: const Icon(Icons.settings, color: Colors.black),
         ),
       ),
-      body: Stack(children: [
-        mlCamera.when(
-          data: (mlCamera) => Stack(
-            children: [
-              CameraView(cameraController: mlCamera.cameraController),
-              buildBoxes(
-                recognitions,
-                mlCamera.actualPreviewSize,
-                mlCamera.ratio,
+      body: Stack(
+        children: [
+          mlCamera.when(
+            data: (mlCamera) => Stack(
+              children: [
+                CameraView(
+                  cameraController: mlCamera.cameraController,
+                ),
+                buildBoxes(
+                  recognitions,
+                  mlCamera.actualPreviewSize,
+                  mlCamera.ratio,
+                ),
+              ],
+            ),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            error: (err, stack) => Center(
+              child: Text(
+                err.toString(),
               ),
-            ],
-          ),
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
-          error: (err, stack) => Center(
-            child: Text(
-              err.toString(),
             ),
           ),
-        ),
-        OverflowBox(
-          alignment: Alignment.bottomCenter,
-          minWidth: 0.0,
-          minHeight: 0.0,
-          maxWidth: double.infinity,
-          maxHeight: double.infinity,
-          child: Container(
-            alignment: Alignment.center,
-            height: 100,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+          OverflowBox(
+            alignment: Alignment.bottomCenter,
+            minWidth: 0.0,
+            minHeight: 0.0,
+            maxWidth: double.infinity,
+            maxHeight: double.infinity,
+            child: Container(
+              alignment: Alignment.center,
+              height: 100,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+                color: Colors.grey[300],
               ),
-              color: Colors.grey[300],
-            ),
-            child: ElevatedButton(
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                     fixedSize: const Size(100, 40),
                     elevation: 5,
                     backgroundColor: Colors.black,
                     shadowColor: Colors.black),
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Profile()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Profile()),
+                  );
                 },
-                child: const Text("End Trip",
-                    style: TextStyle(color: Colors.white))),
+                child: const Text(
+                  "End Trip",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -96,6 +110,7 @@ class MainPage extends HookConsumerWidget {
       return const SizedBox();
     }
     return Stack(
+      // here we need to do something else with recognitions !!! and maybe check with the settings
       children: recognitions.map((result) {
         return BoundingBox(
           result: result,
@@ -112,7 +127,9 @@ class CameraView extends StatelessWidget {
     Key? key,
     required this.cameraController,
   }) : super(key: key);
+
   final CameraController cameraController;
+
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
