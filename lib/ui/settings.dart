@@ -1,20 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_japan_v3/ui/main_page.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Settings extends StatefulWidget {
+class SettingsState {
+  bool showCigarette = true;
+  bool showMask = true;
+  bool showCellPhone = true;
+
+  SettingsState copyWith({
+    bool? showCigarette,
+    bool? showMask,
+    bool? showCellPhone,
+  }) {
+    return SettingsState()
+      ..showCigarette = showCigarette ?? this.showCigarette
+      ..showMask = showMask ?? this.showMask
+      ..showCellPhone = showCellPhone ?? this.showCellPhone;
+  }
+}
+
+class SettingsNotifier extends StateNotifier<SettingsState> {
+  SettingsNotifier() : super(SettingsState());
+
+  void setShowCigarette(bool value) {
+    state = state.copyWith(showCigarette: value);
+  }
+
+  void setShowMask(bool value) {
+    state = state.copyWith(showMask: value);
+  }
+
+  void setShowCellPhone(bool value) {
+    state = state.copyWith(showCellPhone: value);
+  }
+}
+
+final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>(
+    (ref) => SettingsNotifier());
+
+class Settings extends HookConsumerWidget {
   const Settings({Key? key}) : super(key: key);
 
   @override
-  State<Settings> createState() => _SettingsState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(settingsProvider);
 
-class _SettingsState extends State<Settings> {
-  bool cigarette = false;
-  bool mask = false;
-  bool phone = false;
-
-  @override
-  Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -52,12 +82,12 @@ class _SettingsState extends State<Settings> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Switch(
-                    value: cigarette,
+                    value: settings.showCigarette,
                     activeColor: Colors.black,
                     onChanged: (bool value) {
-                      setState(() {
-                        cigarette = value;
-                      });
+                      ref
+                          .read(settingsProvider.notifier)
+                          .setShowCigarette(value);
                     }),
               ),
             ],
@@ -81,12 +111,12 @@ class _SettingsState extends State<Settings> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Switch(
-                    value: phone,
+                    value: settings.showCellPhone,
                     activeColor: Colors.black,
                     onChanged: (bool value) {
-                      setState(() {
-                        phone = value;
-                      });
+                      ref
+                          .read(settingsProvider.notifier)
+                          .setShowCellPhone(value);
                     }),
               ),
             ],
@@ -110,12 +140,10 @@ class _SettingsState extends State<Settings> {
               Container(
                 alignment: Alignment.topLeft,
                 child: Switch(
-                    value: mask,
+                    value: settings.showMask,
                     activeColor: Colors.black,
                     onChanged: (bool value) {
-                      setState(() {
-                        mask = value;
-                      });
+                      ref.read(settingsProvider.notifier).setShowMask(value);
                     }),
               ),
             ],

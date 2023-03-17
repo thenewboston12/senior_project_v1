@@ -17,6 +17,25 @@ class MainPage extends HookConsumerWidget {
     final size = MediaQuery.of(context).size;
     final mlCamera = ref.watch(mlCameraProvider(size));
     final recognitions = ref.watch(recognitionsProvider);
+    final settings = ref.watch(settingsProvider);
+
+    //filter the needed recognitions based on the settings
+    final filteredRecognitions = recognitions.where((recognition) {
+      switch (recognition.label) {
+        case 0:
+        case 3:
+          return true; // Always keep awake and drowsy recognitions
+        case 4:
+        case 5:
+          return settings.showMask;
+        case 1:
+          return settings.showCellPhone;
+        case 2:
+          return settings.showCigarette;
+        default:
+          return false;
+      }
+    }).toList();
 
     return Scaffold(
       backgroundColor: Colors.grey[300],
@@ -48,7 +67,7 @@ class MainPage extends HookConsumerWidget {
                   cameraController: mlCamera.cameraController,
                 ),
                 buildBoxes(
-                  recognitions,
+                  filteredRecognitions,
                   mlCamera.actualPreviewSize,
                   mlCamera.ratio,
                 ),
