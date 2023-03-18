@@ -40,6 +40,7 @@ final settingsProvider = StateNotifierProvider<SettingsNotifier, SettingsState>(
 
 class Settings extends HookConsumerWidget {
   const Settings({Key? key}) : super(key: key);
+  static String routeName = '/settings';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,8 +57,7 @@ class Settings extends HookConsumerWidget {
           backgroundColor: Colors.grey[300],
           leading: IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MainPage()));
+              Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back, color: Colors.black),
           ),
@@ -154,8 +154,7 @@ class Settings extends HookConsumerWidget {
                   backgroundColor: Colors.black,
                   shadowColor: Colors.black),
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const MainPage()));
+                Navigator.pop(context);
               },
               child: const Text("Save changes",
                   style: TextStyle(color: Colors.white))),

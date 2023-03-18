@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:camera/camera.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 import 'package:flutter_japan_v3/data/model/ml_camera.dart';
 import 'package:flutter_japan_v3/data/entity/recognition.dart';
@@ -18,6 +19,8 @@ class MainPage extends HookConsumerWidget {
     final mlCamera = ref.watch(mlCameraProvider(size));
     final recognitions = ref.watch(recognitionsProvider);
     final settings = ref.watch(settingsProvider);
+
+    var watchForMask = settings.showMask;
 
     //filter the needed recognitions based on the settings
     final filteredRecognitions = recognitions.where((recognition) {
@@ -66,11 +69,7 @@ class MainPage extends HookConsumerWidget {
                 CameraView(
                   cameraController: mlCamera.cameraController,
                 ),
-                buildBoxes(
-                  filteredRecognitions,
-                  mlCamera.actualPreviewSize,
-                  mlCamera.ratio,
-                ),
+                buildBoxes(filteredRecognitions, context, watchForMask),
               ],
             ),
             loading: () => const Center(
@@ -124,22 +123,88 @@ class MainPage extends HookConsumerWidget {
   }
 
   Widget buildBoxes(
-      List<Recognition> recognitions, Size actualPreviewSize, double ratio) {
-    if (recognitions.isEmpty) {
+      List<Recognition> recognitions, BuildContext context, bool isMask) {
+    bool hasMask = false;
+    Set<String> violations = {};
+
+    for (var recognition in recognitions) {
+      var displayLabel = recognition.displayLabel;
+
+      if (displayLabel == 'drowsy') {
+        violations.add('Drowsiness');
+      }
+      if (displayLabel == 'cell_phone') {
+        violations.add('Cell Phone');
+      }
+      if (displayLabel == 'cigarette') {
+        violations.add('Smoking behavior');
+      }
+
+      if (displayLabel == 'without_mask') {
+        violations.add('Mask Absence');
+      }
+
+      if (displayLabel == 'with_mask') {
+        hasMask = true;
+      }
+
+      if (isMask && (displayLabel == 'without_mask')) {
+        hasMask = false;
+      }
+    }
+
+    if (isMask && !hasMask) {
+      violations.add("Mask Absence");
+    }
+
+    // if no violations then do nothing
+    if (violations.isEmpty) {
       return const SizedBox();
     }
-    return Stack(
-      // here we need to do something else with recognitions !!! and maybe check with the settings
-      children: recognitions.map((result) {
-        return BoundingBox(
-          result: result,
-          actualPreviewSize: actualPreviewSize,
-          ratio: ratio,
-        );
-      }).toList(),
+
+    String text = '';
+
+    for (var alert in violations) {
+      text += alert;
+      text += " ";
+    }
+    text += "was detected!";
+
+    final player = AudioCache();
+    player.play('warning.mp3');
+
+    return AlertDialog(
+      title: const Text("Alert"),
+      content: Text(text),
+      actions: const [
+        // TextButton(
+        //   onPressed: () => Future.delayed(Duration.zero, () {
+        //     Navigator.pop(context);
+        //   }),
+        //   child: const Text('Close'),
+        // ),
+      ],
     );
+
+    //showAlertDialog(context);
+
+    //return const SizedBox();
   }
 }
+
+// void showAlertDialog(BuildContext ctx) => showDialog(
+//       context: ctx,
+//       builder: (ctx) => AlertDialog(
+//         title: const Text("Alert"),
+//         content: const Text("sample text"),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.pop(ctx),
+//             child: const Text('Close'),
+//           ),
+//         ],
+//       ),
+//     );
 
 class CameraView extends StatelessWidget {
   const CameraView({
@@ -160,63 +225,63 @@ class CameraView extends StatelessWidget {
   }
 }
 
-class BoundingBox extends StatelessWidget {
-  const BoundingBox({
-    Key? key,
-    required this.result,
-    required this.actualPreviewSize,
-    required this.ratio,
-  }) : super(key: key);
-  final Recognition result;
-  final Size actualPreviewSize;
-  final double ratio;
-  @override
-  Widget build(BuildContext context) {
-    final renderLocation = result.getRenderLocation(
-      actualPreviewSize,
-      ratio,
-    );
-    return Positioned(
-      left: renderLocation.left,
-      top: renderLocation.top,
-      width: renderLocation.width,
-      height: renderLocation.height,
-      child: Container(
-        width: renderLocation.width,
-        height: renderLocation.height,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.cyan,
-            width: 1,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(2),
-          ),
-        ),
-        child: buildBoxLabel(result, context),
-      ),
-    );
-  }
+// class BoundingBox extends StatelessWidget {
+//   const BoundingBox({
+//     Key? key,
+//     required this.result,
+//     required this.actualPreviewSize,
+//     required this.ratio,
+//   }) : super(key: key);
+//   final Recognition result;
+//   final Size actualPreviewSize;
+//   final double ratio;
+//   @override
+//   Widget build(BuildContext context) {
+//     final renderLocation = result.getRenderLocation(
+//       actualPreviewSize,
+//       ratio,
+//     );
+//     return Positioned(
+//       left: renderLocation.left,
+//       top: renderLocation.top,
+//       width: renderLocation.width,
+//       height: renderLocation.height,
+//       child: Container(
+//         width: renderLocation.width,
+//         height: renderLocation.height,
+//         decoration: BoxDecoration(
+//           border: Border.all(
+//             color: Colors.cyan,
+//             width: 1,
+//           ),
+//           borderRadius: const BorderRadius.all(
+//             Radius.circular(2),
+//           ),
+//         ),
+//         child: buildBoxLabel(result, context),
+//       ),
+//     );
+//   }
 
-  Align buildBoxLabel(Recognition result, BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: FittedBox(
-        child: ColoredBox(
-          color: Colors.blue,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                result.displayLabel,
-              ),
-              Text(
-                ' ${result.score.toStringAsFixed(2)}',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   Align buildBoxLabel(Recognition result, BuildContext context) {
+//     return Align(
+//       alignment: Alignment.topLeft,
+//       child: FittedBox(
+//         child: ColoredBox(
+//           color: Colors.blue,
+//           child: Row(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text(
+//                 result.displayLabel,
+//               ),
+//               Text(
+//                 ' ${result.score.toStringAsFixed(2)}',
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
