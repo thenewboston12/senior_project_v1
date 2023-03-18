@@ -185,26 +185,8 @@ class MainPage extends HookConsumerWidget {
         // ),
       ],
     );
-
-    //showAlertDialog(context);
-
-    //return const SizedBox();
   }
 }
-
-// void showAlertDialog(BuildContext ctx) => showDialog(
-//       context: ctx,
-//       builder: (ctx) => AlertDialog(
-//         title: const Text("Alert"),
-//         content: const Text("sample text"),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.pop(ctx),
-//             child: const Text('Close'),
-//           ),
-//         ],
-//       ),
-//     );
 
 class CameraView extends StatelessWidget {
   const CameraView({
@@ -225,63 +207,66 @@ class CameraView extends StatelessWidget {
   }
 }
 
-// class BoundingBox extends StatelessWidget {
-//   const BoundingBox({
-//     Key? key,
-//     required this.result,
-//     required this.actualPreviewSize,
-//     required this.ratio,
-//   }) : super(key: key);
-//   final Recognition result;
-//   final Size actualPreviewSize;
-//   final double ratio;
-//   @override
-//   Widget build(BuildContext context) {
-//     final renderLocation = result.getRenderLocation(
-//       actualPreviewSize,
-//       ratio,
-//     );
-//     return Positioned(
-//       left: renderLocation.left,
-//       top: renderLocation.top,
-//       width: renderLocation.width,
-//       height: renderLocation.height,
-//       child: Container(
-//         width: renderLocation.width,
-//         height: renderLocation.height,
-//         decoration: BoxDecoration(
-//           border: Border.all(
-//             color: Colors.cyan,
-//             width: 1,
-//           ),
-//           borderRadius: const BorderRadius.all(
-//             Radius.circular(2),
-//           ),
-//         ),
-//         child: buildBoxLabel(result, context),
-//       ),
-//     );
-//   }
+/*
+class BoundingBox extends StatelessWidget {
+  const BoundingBox({
+    Key? key,
+    required this.result,
+    required this.actualPreviewSize,
+    required this.ratio,
+  }) : super(key: key);
+  final Recognition result;
+  final Size actualPreviewSize;
+  final double ratio;
+  @override
+  Widget build(BuildContext context) {
+    final renderLocation = result.getRenderLocation(
+      actualPreviewSize,
+      ratio,
+    );
+    return Positioned(
+      left: renderLocation.left,
+      top: renderLocation.top,
+      width: renderLocation.width,
+      height: renderLocation.height,
+      child: Container(
+        width: renderLocation.width,
+        height: renderLocation.height,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.cyan,
+            width: 1,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(2),
+          ),
+        ),
+        child: buildBoxLabel(result, context),
+      ),
+    );
+  }
 
-//   Align buildBoxLabel(Recognition result, BuildContext context) {
-//     return Align(
-//       alignment: Alignment.topLeft,
-//       child: FittedBox(
-//         child: ColoredBox(
-//           color: Colors.blue,
-//           child: Row(
-//             mainAxisSize: MainAxisSize.min,
-//             children: [
-//               Text(
-//                 result.displayLabel,
-//               ),
-//               Text(
-//                 ' ${result.score.toStringAsFixed(2)}',
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+  Align buildBoxLabel(Recognition result, BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: FittedBox(
+        child: ColoredBox(
+          color: Colors.blue,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                result.displayLabel,
+              ),
+              Text(
+                ' ${result.score.toStringAsFixed(2)}',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+*/
