@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import 'package:flutter_japan_v3/ui/auth.dart';
 import 'package:flutter_japan_v3/ui/main_page.dart';
 import 'package:flutter_japan_v3/ui/profile.dart';
 import 'package:flutter_japan_v3/ui/settings.dart';
@@ -16,8 +17,9 @@ class MyApp extends HookWidget {
         colorScheme: const ColorScheme.dark(),
       ),
       navigatorKey: GlobalKey<NavigatorState>(),
-      initialRoute: MainPage.routeName,
+      initialRoute: AuthPage.routeName,
       routes: {
+        AuthPage.routeName: (context) => AuthPage(),
         MainPage.routeName: (context) => const MainPage(),
         Profile.routeName: (context) => const Profile(),
         Settings.routeName: (context) => const Settings(),

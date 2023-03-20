@@ -1,14 +1,68 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
 
   //text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   //sign user in method
-  void signUserIn() {}
+  void Function() signUserIn(context) {
+    //show loading circle
+    void signIn () async {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      );
+
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text);
+
+        if (context.mounted) Navigator.pop(context);
+      } on FirebaseAuthException catch (e) {
+        //Navigator.pop(context);
+
+        if (e.code == 'user-not-found') {
+          wrongEmailMessage(context);
+        } else if (e.code == 'wrong-password') {
+          wrongPasswordMessage(context);
+        }
+      }
+    }
+
+    //pop the loading circle
+    //if (context.mounted) Navigator.pop(context);
+    return signIn;
+  }
+
+  void wrongEmailMessage(context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Incorrect Email'),
+          );
+        });
+  }
+
+  void wrongPasswordMessage(context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Incorrect Password'),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +103,7 @@ class LoginPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: TextField(
-                  controller: usernameController,
+                  controller: emailController,
                   obscureText: false,
                   decoration: InputDecoration(
                     enabledBorder: const OutlineInputBorder(
@@ -109,7 +163,7 @@ class LoginPage extends StatelessWidget {
 
               Builder(builder: (context) {
                 return GestureDetector(
-                  onTap: signUserIn,
+                  onTap: signUserIn(context),
                   child: Container(
                     padding: const EdgeInsets.all(25),
                     margin: const EdgeInsets.symmetric(horizontal: 25),
