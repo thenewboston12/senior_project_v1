@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_japan_v3/ui/main_page.dart';
 import 'package:flutter_japan_v3/ui/settings.dart';
 import 'package:flutter_japan_v3/ui/loginpage.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({Key? key}) : super(key: key);
+  Profile({Key? key}) : super(key: key);
   static String routeName = '/profile';
 
   @override
@@ -12,6 +13,12 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  signOut() async {
+    await _auth.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,6 +43,7 @@ class _ProfileState extends State<Profile> {
             actions: <Widget>[
               IconButton(
                   onPressed: () {
+                    signOut();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (BuildContext context) {
                       return LoginPage();

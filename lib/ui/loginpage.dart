@@ -2,9 +2,12 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_japan_v3/ui/profile.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({Key? key}) : super(key: key);
+
+  static String routeName = "/signin";
 
   //text editing controllers
   final emailController = TextEditingController();
@@ -28,6 +31,11 @@ class LoginPage extends StatelessWidget {
             email: emailController.text, password: passwordController.text);
 
         if (context.mounted) Navigator.pop(context);
+        Navigator.push(context,
+          MaterialPageRoute(builder: (BuildContext context) {
+            return Profile();
+          })
+        );
       } on FirebaseAuthException catch (e) {
         //Navigator.pop(context);
 

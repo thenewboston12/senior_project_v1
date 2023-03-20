@@ -20,7 +20,7 @@ class AuthPage extends StatelessWidget {
             return LoginPage();
           } else {
             // User is logged in
-            return const Profile();
+            return Profile();
           }
         } else {
           // Connection state is not active, show loading spinner
