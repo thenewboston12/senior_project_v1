@@ -5,6 +5,7 @@ import 'package:flutter_japan_v3/ui/loginpage.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
+  static String routeName = '/profile';
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -27,7 +28,10 @@ class _ProfileState extends State<Profile> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Settings()));
               },
-              icon: const Icon(Icons.settings, color: Colors.black),
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.black,
+              ),
             ),
             actions: <Widget>[
               IconButton(
@@ -71,13 +75,12 @@ class _ProfileState extends State<Profile> {
                     backgroundColor: Colors.black,
                     shadowColor: Colors.black),
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MainPage()));
+                  Navigator.pop(context);
                 },
-                child: const Text("Start detecting",
-                    style: TextStyle(color: Colors.white))),
+                child: const Text(
+                  "Start detecting",
+                  style: TextStyle(color: Colors.white),
+                )),
           ),
         ]),
       ),
