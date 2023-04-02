@@ -83,7 +83,11 @@ class _ProfileState extends State<Profile> {
                     backgroundColor: Colors.black,
                     shadowColor: Colors.black),
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.push(context,
+                    MaterialPageRoute(builder: (BuildContext context) {
+                      return const MainPage();
+                    })
+                  );
                 },
                 child: const Text(
                   "Start detecting",

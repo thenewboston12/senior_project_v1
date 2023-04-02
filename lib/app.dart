@@ -22,7 +22,7 @@ class MyApp extends HookWidget {
       routes: {
         AuthPage.routeName: (context) => AuthPage(),
         LoginPage.routeName: (context) => LoginPage(),
-        MainPage.routeName: (context) => const MainPage(),
+        MainPage.routeName: (context) => MainPage(),
         Profile.routeName: (context) => Profile(),
         Settings.routeName: (context) => const Settings(),
       },
