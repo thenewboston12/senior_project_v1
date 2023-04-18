@@ -85,7 +85,7 @@ class MLCamera {
       isolateCamImgData.cameraImage,
     );
     if (Platform.isAndroid) {
-      image = image_lib.copyRotate(image, 90);
+      image = image_lib.copyRotate(image, 270);
     }
 
     final classifier = Classifier(
