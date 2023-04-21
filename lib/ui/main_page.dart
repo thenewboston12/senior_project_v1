@@ -105,10 +105,7 @@ class MainPage extends HookConsumerWidget {
                     backgroundColor: Colors.black,
                     shadowColor: Colors.black),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Profile()),
-                  );
+                  Navigator.pop(context);
                 },
                 child: const Text(
                   "End Trip",
@@ -144,7 +141,7 @@ class MainPage extends HookConsumerWidget {
         violations.add('Mask Absence');
       }
 
-      if (displayLabel == 'with_mask') {
+      if (isMask && displayLabel == 'with_mask') {
         hasMask = true;
       }
 
@@ -173,18 +170,57 @@ class MainPage extends HookConsumerWidget {
     final player = AudioCache();
     player.play('warning.mp3');
 
-    return AlertDialog(
-      title: const Text("Alert"),
-      content: Text(text),
-      actions: const [
-        // TextButton(
-        //   onPressed: () => Future.delayed(Duration.zero, () {
-        //     Navigator.pop(context);
-        //   }),
-        //   child: const Text('Close'),
-        // ),
-      ],
-    );
+    const primaryColor = Color(0xffe53935); // e53935
+    const secondaryColor = Color(0xffff1744); // ff1744
+    const accentColor = Color(0xffffffff);
+
+    return Dialog(
+        elevation: 1,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 1.5,
+          height: MediaQuery.of(context).size.height / 5,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [primaryColor!, secondaryColor!]),
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: [
+                BoxShadow(
+                    offset: const Offset(12, 26),
+                    blurRadius: 50,
+                    spreadRadius: 0,
+                    color: Colors.grey.withOpacity(.1)),
+              ]),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                backgroundColor: accentColor.withOpacity(.05),
+                radius: 25,
+                child: Image.network(
+                    "https://firebasestorage.googleapis.com/v0/b/flutterbricks-public.appspot.com/o/FlutterBricksLogo-Med.png?alt=media&token=7d03fedc-75b8-44d5-a4be-c1878de7ed52"),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text("Warning!",
+                  style: TextStyle(
+                      color: accentColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold)),
+              const SizedBox(
+                height: 3.5,
+              ),
+              Text(text,
+                  style: const TextStyle(
+                      color: accentColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w300)),
+              const SizedBox(
+                height: 15,
+              ),
+            ],
+          ),
+        ));
   }
 }
 
@@ -206,67 +242,3 @@ class CameraView extends StatelessWidget {
     );
   }
 }
-
-/*
-class BoundingBox extends StatelessWidget {
-  const BoundingBox({
-    Key? key,
-    required this.result,
-    required this.actualPreviewSize,
-    required this.ratio,
-  }) : super(key: key);
-  final Recognition result;
-  final Size actualPreviewSize;
-  final double ratio;
-  @override
-  Widget build(BuildContext context) {
-    final renderLocation = result.getRenderLocation(
-      actualPreviewSize,
-      ratio,
-    );
-    return Positioned(
-      left: renderLocation.left,
-      top: renderLocation.top,
-      width: renderLocation.width,
-      height: renderLocation.height,
-      child: Container(
-        width: renderLocation.width,
-        height: renderLocation.height,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.cyan,
-            width: 1,
-          ),
-          borderRadius: const BorderRadius.all(
-            Radius.circular(2),
-          ),
-        ),
-        child: buildBoxLabel(result, context),
-      ),
-    );
-  }
-
-  Align buildBoxLabel(Recognition result, BuildContext context) {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: FittedBox(
-        child: ColoredBox(
-          color: Colors.blue,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                result.displayLabel,
-              ),
-              Text(
-                ' ${result.score.toStringAsFixed(2)}',
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-*/

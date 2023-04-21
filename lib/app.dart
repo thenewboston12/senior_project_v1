@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:flutter_japan_v3/ui/auth.dart';
+import 'package:flutter_japan_v3/ui/empty_profile_page.dart';
 import 'package:flutter_japan_v3/ui/loginpage.dart';
 import 'package:flutter_japan_v3/ui/main_page.dart';
 import 'package:flutter_japan_v3/ui/profile.dart';
+import 'package:flutter_japan_v3/ui/profile_page.dart';
 import 'package:flutter_japan_v3/ui/settings.dart';
 
 class MyApp extends HookWidget {
@@ -23,7 +25,9 @@ class MyApp extends HookWidget {
         AuthPage.routeName: (context) => AuthPage(),
         LoginPage.routeName: (context) => LoginPage(),
         MainPage.routeName: (context) => MainPage(),
-        Profile.routeName: (context) => Profile(),
+        // Profile.routeName: (context) => Profile(),
+        ProfilePage1.routeName: (context) => ProfilePage1(),
+        EmptyProfilePage.routeName: (context) => EmptyProfilePage(),
         Settings.routeName: (context) => const Settings(),
       },
     );

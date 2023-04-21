@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_japan_v3/ui/loginpage.dart';
 import 'package:flutter_japan_v3/ui/profile.dart';
+import 'package:flutter_japan_v3/ui/profile_page.dart';
 
 class AuthPage extends StatelessWidget {
   AuthPage({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class AuthPage extends StatelessWidget {
             return LoginPage();
           } else {
             // User is logged in
-            return Profile();
+            return ProfilePage1();
           }
         } else {
           // Connection state is not active, show loading spinner

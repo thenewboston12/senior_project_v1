@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_japan_v3/ui/main_page.dart';
+import 'package:flutter_japan_v3/ui/navbar.dart';
 import 'package:flutter_japan_v3/ui/settings.dart';
 import 'package:flutter_japan_v3/ui/loginpage.dart';
 
 class Profile extends StatefulWidget {
   Profile({Key? key}) : super(key: key);
-  static String routeName = '/profile';
+  static String routeName = '/profile1';
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -95,6 +96,7 @@ class _ProfileState extends State<Profile> {
                 )),
           ),
         ]),
+        bottomNavigationBar: const BottomNavBarFb1(),
       ),
     );
   }
